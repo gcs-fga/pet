@@ -1,6 +1,5 @@
 import unittest
 import pet.models
-import pet
 from sqlalchemy.exc import OperationalError
 import os.path
 from mock import MagicMock
