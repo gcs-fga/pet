@@ -5,7 +5,6 @@ import os.path
 from mock import MagicMock
 import pet.vcs
 
-
 class TestPetModels(unittest.TestCase):
 
     def setUp(self):
@@ -69,3 +68,25 @@ class TestPetModels(unittest.TestCase):
         value = 'git'
         pet.vcs.vcs_backend = MagicMock(return_value=value)
         self.assertEqual(repository.vcs, value)
+
+    def test_named_trees(self):
+        # NamedTree instances
+        nt1 = pet.models.NamedTree()
+        nt1.name = "name_nt1"
+        nt2 = pet.models.NamedTree()
+        nt2.name = "name_nt2"
+        nts = [nt1, nt2]
+
+        # Mocking chained methods
+        query_rv = MagicMock()
+        query_rv.filter_by = MagicMock(return_value=nts)
+        object_session_rv = MagicMock()
+        object_session_rv.query = MagicMock(return_value=query_rv)
+        pet.models.Session.object_session =MagicMock(return_value=object_session_rv)
+
+        expected = {
+            nts[0].name : nts[0],
+            nts[1].name : nts[1],
+        }
+        actual = pet.models.Package()._named_trees('branch')
+        self.assertEqual(expected, actual)
