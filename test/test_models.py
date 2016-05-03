@@ -10,6 +10,13 @@ class TestPetModels(unittest.TestCase):
     def setUp(self):
         self.isfile = os.path.isfile
         self.engine = pet.engine
+        self.nt1 = pet.models.NamedTree()
+        self.nt1.name = "name_nt1"
+        self.nt2 = pet.models.NamedTree()
+        self.nt2.name = "name_nt3"
+        self.ntNone = pet.models.NamedTree()
+        self.ntNone.name = None
+        self.namedTrees = [self.nt1, self.nt2, self.ntNone]
 
     def tearDown(self):
         os.path.isfile = self.isfile
@@ -69,24 +76,62 @@ class TestPetModels(unittest.TestCase):
         pet.vcs.vcs_backend = MagicMock(return_value=value)
         self.assertEqual(repository.vcs, value)
 
-    def test_named_trees(self):
-        # NamedTree instances
-        nt1 = pet.models.NamedTree()
-        nt1.name = "name_nt1"
-        nt2 = pet.models.NamedTree()
-        nt2.name = "name_nt2"
-        nts = [nt1, nt2]
-
+    def test_package_named_trees(self):
         # Mocking chained methods
         query_rv = MagicMock()
-        query_rv.filter_by = MagicMock(return_value=nts)
+        query_rv.filter_by = MagicMock(return_value=self.namedTrees)
         object_session_rv = MagicMock()
         object_session_rv.query = MagicMock(return_value=query_rv)
-        pet.models.Session.object_session =MagicMock(return_value=object_session_rv)
+        pet.models.Session.object_session = MagicMock(return_value=object_session_rv)
 
         expected = {
-            nts[0].name : nts[0],
-            nts[1].name : nts[1],
+            self.nt1.name : self.nt1,
+            self.nt2.name : self.nt2,
+            self.ntNone.name : self.ntNone,
         }
-        actual = pet.models.Package()._named_trees('branch')
+        actual = pet.models.Package()._named_trees('tag_or_branch')
+        self.assertEqual(expected, actual)
+
+    def test_package_branches(self):
+        # Mocking chained methods
+        query_rv = MagicMock()
+        query_rv.filter_by = MagicMock(return_value=self.namedTrees)
+        object_session_rv = MagicMock()
+        object_session_rv.query = MagicMock(return_value=query_rv)
+        pet.models.Session.object_session = MagicMock(return_value=object_session_rv)
+
+        expected = {
+            self.nt1.name : self.nt1,
+            self.nt2.name : self.nt2,
+            self.ntNone.name : self.ntNone,
+        }
+        actual = pet.models.Package().branches
+        self.assertEqual(expected, actual)
+
+    def test_package_tags(self):
+        # Mocking chained methods
+        query_rv = MagicMock()
+        query_rv.filter_by = MagicMock(return_value=self.namedTrees)
+        object_session_rv = MagicMock()
+        object_session_rv.query = MagicMock(return_value=query_rv)
+        pet.models.Session.object_session = MagicMock(return_value=object_session_rv)
+
+        expected = {
+            self.nt1.name : self.nt1,
+            self.nt2.name : self.nt2,
+            self.ntNone.name : self.ntNone,
+        }
+        actual = pet.models.Package().tags
+        self.assertEqual(expected, actual)
+
+    def test_package_trunk(self):
+        # Mocking chained methods
+        query_rv = MagicMock()
+        query_rv.filter_by = MagicMock(return_value=self.namedTrees)
+        object_session_rv = MagicMock()
+        object_session_rv.query = MagicMock(return_value=query_rv)
+        pet.models.Session.object_session = MagicMock(return_value=object_session_rv)
+
+        expected = self.ntNone
+        actual = pet.models.Package().trunk
         self.assertEqual(expected, actual)
