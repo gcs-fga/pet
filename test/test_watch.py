@@ -64,19 +64,60 @@ class TestPetWatch(unittest.TestCase):
         self.cpan._files = value
         self.assertEqual(value, self.cpan.files)
 
+    def test_watchrule_mangle(self):
+        value = "05052016"
+        pet.perlre.apply_perlre = MagicMock(return_value=value)
+        self.assertEqual(value, self.watchRule._mangle(["1", "2"], "str"))
+
+    def test_watchrule_uversionmangle_if_none(self):
+        param = "str"
+        self.watchRule.options = MagicMock()
+        self.watchRule.options.get = MagicMock(return_value=None)
+        self.assertEqual(param, self.watchRule.uversionmangle(param))
+
+    def test_watchrule_uversionmangle_if_not_none(self):
+        param = "str"
+        value = "str2"
+        self.watchRule.options = MagicMock()
+        self.watchRule.options.get = MagicMock(return_value="string")
+        self.watchRule._mangle = MagicMock(return_value=value)
+        self.assertNotEqual(param, value)
+        self.assertEqual(value, self.watchRule.uversionmangle(param))
+
+    def test_watchrule_dversionmangle_if_none(self):
+        param = "str"
+        value = "str_rand"
+        self._re_upstream_version = MagicMock()
+        self._re_upstream_version.sub = MagicMock(return_value=value)
+        self.watchRule.options = MagicMock()
+        self.watchRule.options.get = MagicMock(return_value=None)
+        self.assertEqual(param, self.watchRule.dversionmangle(param))
+
+    def test_watchrule_dversionmangle_if_not_none(self):
+        param = "str"
+        value = "str2"
+        value1 = "str3"
+        self._re_upstream_version = MagicMock()
+        self._re_upstream_version.sub = MagicMock(return_value=value1)
+        self.watchRule.options = MagicMock()
+        self.watchRule.options.get = MagicMock(return_value="string")
+        self.watchRule._mangle = MagicMock(return_value=value)
+        self.assertNotEqual(param, value)
+        self.assertEqual(value, self.watchRule.dversionmangle(param))
+
     # def test_watchrule_parse_on_perlre_compile_error(self):
     #     import re
     #     rule = 'testrule1'
     #     pet.perlre.compile = MagicMock(side_effect=Exception())
     #     with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
     #         self.watchRule.parse(rule)
-    #     self.assertEquals("Rule '{0}' is invalid.".format(rule),
+    #     self.assertEquals("Could not parse regular expression '{0}': {1}.".format("ueioeioueiuo", "ueiuoeuoi"),
     #                       cm.exception.message)
-
+    #
     # def test_watchrule_parse_on_re_search_error(self):
     #     import re
     #     rule = 'testrule2'
-    #     re.search = MagicMock(side_effect=Exception())
+    #     pet.watch._re_paren.search = MagicMock(side_effect=Exception())
     #     with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
     #         self.watchRule.parse(rule)
     #     self.assertEquals("Rule '{0}' is invalid.".format(rule),
