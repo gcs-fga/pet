@@ -1,6 +1,7 @@
 import unittest
 
 from mock import MagicMock
+from mock import patch
 
 import pet.watch
 import pet.perlre
@@ -105,6 +106,25 @@ class TestPetWatch(unittest.TestCase):
         self.assertNotEqual(param, value)
         self.assertEqual(value, self.watchRule.dversionmangle(param))
 
+    def test_watcher_init(self):
+        self.assertIsNotNone(self.watcher._cpan);
+
+    def test_urlopen_with_context(self):
+        import ssl
+        import urllib2
+        ssl._create_unverified_context = MagicMock()
+        urllib2.urlopen = MagicMock()
+        pet.watch.urlopen([], context="value")
+        self.assertFalse(ssl._create_unverified_context.called)
+
+    def test_urlopen_without_context(self):
+        import ssl
+        import urllib2
+        ssl._create_unverified_context = MagicMock()
+        urllib2.urlopen = MagicMock()
+        pet.watch.urlopen([], other="value")
+        self.assertTrue(ssl._create_unverified_context.called)
+
     # def test_watchrule_parse_on_perlre_compile_error(self):
     #     import re
     #     rule = 'testrule1'
@@ -113,7 +133,7 @@ class TestPetWatch(unittest.TestCase):
     #         self.watchRule.parse(rule)
     #     self.assertEquals("Could not parse regular expression '{0}': {1}.".format("ueioeioueiuo", "ueiuoeuoi"),
     #                       cm.exception.message)
-    #
+
     # def test_watchrule_parse_on_re_search_error(self):
     #     import re
     #     rule = 'testrule2'
