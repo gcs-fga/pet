@@ -60,11 +60,6 @@ class TestPetWatch(unittest.TestCase):
         actual = self.cpan.dists
         self.assertEqual(expected, actual)
 
-    def test_cpan_files_when_not_none(self):
-        value = 'filescpantest1'
-        self.cpan._files = value
-        self.assertEqual(value, self.cpan.files)
-
     def test_watchrule_mangle(self):
         value = "05052016"
         pet.perlre.apply_perlre = MagicMock(return_value=value)
@@ -124,6 +119,102 @@ class TestPetWatch(unittest.TestCase):
         urllib2.urlopen = MagicMock()
         pet.watch.urlopen([], other="value")
         self.assertTrue(ssl._create_unverified_context.called)
+
+    def test_cpan_files_not_none(self):
+        value = "100520161"
+        self.cpan._files = value
+        self.assertEqual(value, self.cpan.files)
+
+    def test_cpan_files_none(self):
+        self.cpan._files = None
+
+        contents_mock = [
+            ".:",
+            "total 666",
+            "drwxrwxr-x. 12 mirror mirror     4096 May 10 19:23 .",
+            "drwxrwxr-x. 12 mirror mirror     4096 Jun 21  2011 ..",
+            "drwxr-xr-x.  3 mirror mirror    12288 May 10 19:22 authors",
+            "drwxr-xr-x.  2 mirror mirror     4096 Aug 30  2002 dwrong",
+            "-rw-rw-r--.  1 mirror mirror     4284 Jun 16  2015 erandom.file",
+            "drwxr-xr-x.  4 mirror mirror     4096 May 10 19:23 modules",
+            "",
+            "./authors:",
+            "total 666",
+            "drwxr-xr-x.  3 mirror mirror    12288 May 10 19:22 .",
+            "drwxrwxr-x. 12 mirror mirror     4096 May 10 19:23 ..",
+            "drwxr-xr-x. 28 mirror mirror    12288 Jan 11  2014 id",
+            "",
+            "./authors/id:",
+            "total 666",
+            "drwxr-xr-x. 28 mirror mirror 12288 Jan 11  2014 .",
+            "drwxr-xr-x.  3 mirror mirror 12288 May 10 19:22 ..",
+            "drwxrwxr-x. 28 mirror mirror  4096 Apr  5 14:18 A",
+            "",
+            "",
+            "./authors/id/A:",
+            "total 666",
+            "drwxrwxr-x. 28 mirror mirror  4096 Apr  5 14:18 .",
+            "drwxr-xr-x. 28 mirror mirror 12288 Jan 11  2014 ..",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 AA",
+            "",
+            "./authors/id/A/AA:",
+            "total 666",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 .",
+            "drwxrwxr-x. 28 mirror mirror  4096 Apr  5 14:18 ..",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 AAPET",
+            "",
+            "./authors/id/A/AA/AAPET:",
+            "total 666",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 .",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 ..",
+            "-r--r--r--.  1 mirror mirror  4940 Apr  6 06:21 CHECKSUMS",
+            "-rw-rw-r--.  1 mirror mirror   679 Mar 21  2003 Games-LogicPuzzle-0.10.readme",
+            "-rw-rw-r--.  1 mirror mirror  4778 Mar 21  2003 Games-LogicPuzzle-0.10.tar.gz",
+            "-rw-rw-r--.  1 mirror mirror   679 Nov  1  2004 Games-LogicPuzzle-0.10.meta",
+            "",
+            "./dwrong:",
+            "total 666",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 .",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 ..",
+            "-rw-rw-r--.  1 mirror mirror   679 Mar 21  2003 Dont-Returnthisfile-1.23.readme",
+            "-rw-rw-r--.  1 mirror mirror  4778 Mar 21  2003 Dont-Returnthisfile-1.23.tar.gz",
+            "-rw-rw-r--.  1 mirror mirror   679 Nov  1  2004 Dont-Returnthisfile-1.23.meta",
+            "",
+            "./modules:",
+            "total 666",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 .",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 ..",
+            "drwxr-xr-x.  3 mirror mirror    12288 May 10 19:22 by-module",
+            "",
+            "./modules/by-module:",
+            "total 666",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 .",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 ..",
+            "drwxr-xr-x.  3 mirror mirror    12288 May 10 19:22 Acme",
+            "",
+            "./modules/by-module/Acme:",
+            "total 666",
+            "drwxrwxr-x.  2 mirror mirror  4096 Apr  6 06:21 .",
+            "drwxrwxr-x. 18 mirror mirror  4096 May  8 14:21 ..",
+            "-rw-rw-r--.  1 mirror mirror   679 Mar 21  2003 Acme-MetaSyntactic-soviet-0.04.readme",
+            "-rw-rw-r--.  1 mirror mirror  4778 Mar 21  2003 Acme-MetaSyntactic-soviet-0.04.tar.gz",
+            "-rw-rw-r--.  1 mirror mirror   679 Nov  1  2004 Acme-MetaSyntactic-soviet-0.04.meta",
+        ]
+
+        results = [
+            "./authors/id/A/AA/AAPET/Games-LogicPuzzle-0.10.tar.gz",
+            "./modules/by-module/Acme/Acme-MetaSyntactic-soviet-0.04.tar.gz"
+        ]
+
+        # Mocking _get_and_uncompress and the close method from the object
+        # it returns. Also, that object must be iterable. We do that with
+        # the list we constructed (contents_mock).
+        mock = MagicMock()
+        mock.__iter__.return_value = contents_mock
+        mock.close = MagicMock()
+        self.cpan._get_and_uncompress = MagicMock(return_value=mock)
+
+        self.assertEqual(results, self.cpan.files)
 
     # def test_watchrule_parse_on_perlre_compile_error(self):
     #     import re
