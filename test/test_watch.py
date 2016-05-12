@@ -216,20 +216,22 @@ class TestPetWatch(unittest.TestCase):
 
         self.assertEqual(results, self.cpan.files)
 
-    # def test_watchrule_parse_on_perlre_compile_error(self):
-    #     import re
-    #     rule = 'testrule1'
-    #     pet.perlre.compile = MagicMock(side_effect=Exception())
-    #     with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
-    #         self.watchRule.parse(rule)
-    #     self.assertEquals("Could not parse regular expression '{0}': {1}.".format("ueioeioueiuo", "ueiuoeuoi"),
-    #                       cm.exception.message)
+    def test_watchrule_parse_on_perlre_compile_error(self):
+        import re
+        mockExceptionMessage = "mockExceptionMessage"
+        rule = 'opts="a=double quotes"" do gg'
+        pet.perlre.compile = MagicMock(side_effect=Exception(mockExceptionMessage))
+        with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
+            self.watchRule.parse(rule)
+        self.assertEquals("Could not parse regular expression '{0}': {1}."
+                         .format("\\Ado\\Z", mockExceptionMessage),
+                                 cm.exception.message)
 
-    # def test_watchrule_parse_on_re_search_error(self):
-    #     import re
-    #     rule = 'testrule2'
-    #     pet.watch._re_paren.search = MagicMock(side_effect=Exception())
-    #     with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
-    #         self.watchRule.parse(rule)
-    #     self.assertEquals("Rule '{0}' is invalid.".format(rule),
-    #                       cm.exception.message)
+    def test_watchrule_parse_on_re_search_error(self):
+        import re
+        rule = 'dogg'
+        opts = 'opts="a="  ' + rule
+        with self.assertRaises(pet.exceptions.InvalidWatchFile) as cm:
+            self.watchRule.parse(opts)
+        self.assertEquals("Rule '{0}' is invalid.".format(rule),
+                          cm.exception.message)
