@@ -65,6 +65,115 @@ def compile(pattern):
     return re.compile(pattern)
 
 
+def null_regex(regexp, string):
+    regexp = regexp.strip()
+    if regexp == "":
+        return False  # string
+    else:
+        return True
+
+def operator_matching(regexp, string):
+    match_op = _re_op.match(regexp)
+    if not match_op:
+        raise RegexpError("Unknown operator in regular expression '{0}'.".format(regexp))
+    op = match_op.group(1)
+
+    if op != 's':
+        raise NotImplemented("Operator '{0}' not implemented.".format(op))
+
+    return match_op
+
+def initial_decoding(regexp, string):
+  match_op = operator_matching(regexp, string)
+  arguments = match_op.group(2)
+  marker = arguments[0]
+  end_marker = _markers.get(marker, marker)
+  last_was_escape = False
+
+  stage = 0 # 0=pattern, (1=replacement-marker), 2=replacement, 3=flags
+  pattern = replacement = flags = ""
+  for char in arguments[1:]:
+    if stage == 1:
+      end_marker = _markers.get(char, char)
+      stage = 2
+      continue
+    if last_was_escape:
+      last_was_escape = False
+      if stage == 0:
+        pattern += char
+      elif stage == 1:
+        raise RegexpError("Invalid regular expression.")
+      elif stage == 2:
+        replacement += char
+      else:
+        flags += char
+    elif char == end_marker:
+      if stage == 0:
+        if marker != end_marker:
+          stage = 1
+        else:
+          stage = 2
+      else:
+        stage = 3
+    else:
+      if char == "\\":
+        last_was_escape = True
+      if stage == 0:
+        pattern += char
+      elif stage == 2:
+        replacement += char
+      else:
+        flags += char
+
+  if stage != 3:
+    raise RegexpError("Invalid regular expression.")
+
+  return values[pattern, replacement, flags]
+
+
+  def flag_decoding(regexp, string):
+    flags = initial_decoding(regexp, string)[2]
+    count = 1
+    py_flags = 0
+    for flag in flags:
+        if flag == 'i':
+            py_flags |= re.I
+        elif flag == 'g':
+            count = 0
+        else:
+            raise RegexpError(
+                "Unknown flag '{0}' used in regular expression.".format(flags))
+
+
+  def regex_in_rules(regexp, string):
+    pattern = initial_decoding(regexp, string)[0]
+    replacement = initial_decoding(regexp, string)[1]
+    for regex, sub in _pattern_rules:
+        pattern = regex.sub(sub, pattern)
+    for regex, sub in _replacement_rules:
+        replacement = regex.sub(sub, replacement)
+    return regex_in_rules[pattern, replacement]
+
+
+def apply_perlre(regexp, string):
+    null_regex_bool = null_regex(regexp, string)
+    operator_matching(regexp, string)
+    initial_decoding(regexp, string)
+    flag_decoding(regexp, string)
+    regex_in_rules(regexp, string)
+    # TODO: flags is only in Python 2.7
+    pattern = regex_in_rules(regexp, string)[0]
+    replacement = regex_in_rules(regexp, string)[1]
+    try:
+        if null_regex:
+            return re.sub(pattern, replacement, string, count=count)
+        else:
+            return string
+    except:
+        return string
+
+
+"""
 def apply_perlre(regexp, string):
     regexp = regexp.strip()
     if regexp == "":
@@ -139,8 +248,10 @@ def apply_perlre(regexp, string):
         replacement = regex.sub(sub, replacement)
 
     # TODO: flags is only in Python 2.7
+
     try:
         return re.sub(pattern, replacement, string, count=count)
     except:
         return string
     # return re.sub(pattern, replacement, string, count=count, flags=py_flags)
+"""
