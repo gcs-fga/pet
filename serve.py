@@ -1,0 +1,7 @@
+import pet.web
+
+import paste.httpserver
+
+def pet_serve():
+    app = pet.web.main()
+    paste.httpserver.serve(app, host='0.0.0.0')

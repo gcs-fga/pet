@@ -19,5 +19,6 @@ import pet.web
 
 import paste.httpserver
 
-app = pet.web.main()
-paste.httpserver.serve(app, host='0.0.0.0')
+def pet_serve():
+    app = pet.web.main()
+    paste.httpserver.serve(app, host='0.0.0.0')
