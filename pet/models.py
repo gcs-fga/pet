@@ -21,6 +21,11 @@ import sqlalchemy.schema
 import sqlalchemy.types
 import os.path
 
+def engine(no_cert):
+    if(no_cert):
+        return sqlalchemy.create_engine('postgresql://pet@bmdb1.debian.org:5435/pet')
+    else:
+        return sqlalchemy.create_engine('postgresql://pet@bmdb1.debian.org:5435/pet?sslmode=verify-full&sslrootcert=/etc/ssl/debian/certs/ca.crt')
 
 class DebVersion(sqlalchemy.types.UserDefinedType):
   """database type for PostgreSQL's debversion type"""
@@ -42,14 +47,14 @@ sqlalchemy.dialects.postgresql.base.ischema_names['debversion'] = DebVersion
 # false (we use the certificate). If if does not exist, the no-certificate
 # flag is true (we dont use the certificat).
 if(os.path.isfile("/etc/ssl/debian/certs/ca.crt")):
-    engine = pet.engine(False)
+    engine = engine(False)
 else:
     print('No certification file found (/etc/ssl/debian/certs/ca.crt)')
     continue_without_ssl = raw_input('Do you want do continue? [Y/n] ')
     if (continue_without_ssl is not 'y'):
-        engine = pet.engine(False)
+        engine = engine(False)
     else:
-        engine = pet.engine(True)
+        engine = engine(True)
 metadata = sqlalchemy.schema.MetaData()
 metadata.reflect(bind=engine)
 Session = sqlalchemy.orm.sessionmaker(bind=engine)

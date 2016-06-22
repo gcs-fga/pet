@@ -16,13 +16,13 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='1.2.3',
+    version='1.2.28',
 
     description='PET is a collection of scripts that gather informatio about your packages',
     long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/pypa/sampleprojec://github.com/PET-UnB/pet',
+    url='https://github.com/PET-UnB/pet',
 
     # Author details
     author='Tiago Assuncao',
@@ -72,7 +72,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=['pyramid_chameleon'],
+    install_requires=['pyramid_chameleon', 'SQLAlchemy'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
@@ -89,8 +89,8 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'pet_serve=pet_serve:pet_serve',
-            'sample=sample:main',
+            'pet_serve=pet.serve:pet_serve',
+            'pet_update=pet.pet_update:pet_update',
         ],
     },
 )
