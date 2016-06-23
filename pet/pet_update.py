@@ -15,13 +15,14 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-import .
+from . import *
 import sql
 
 import argparse
 import sys
 
-def pet_update()
+
+def pet_update():
     parser = argparse.ArgumentParser(
         description='create and update database schema for PET')
 
@@ -33,5 +34,5 @@ def pet_update()
 
     options = parser.parse_args(sys.argv[1:])
 
-    pet.sql.DBUpdater().run(engine=pet.engine(options.no_cert),
+    sql.DBUpdater().run(engine=engine(options.no_cert),
                             create_database=options.create)

@@ -18,6 +18,8 @@ import sqlalchemy
 
 def engine(no_cert):
     if(no_cert):
+        print("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
         return sqlalchemy.create_engine('postgresql://pet@bmdb1.debian.org:5435/pet')
     else:
+        print("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss")
         return sqlalchemy.create_engine('postgresql://pet@bmdb1.debian.org:5435/pet?sslmode=verify-full&sslrootcert=/etc/ssl/debian/certs/ca.crt')
