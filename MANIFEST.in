@@ -1,4 +1,0 @@
-include README.md
-include pet/README.md
-recursive-include pet/web/static/*
-recursive-include pet/web/templates/*
