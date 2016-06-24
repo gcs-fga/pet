@@ -1,5 +1,5 @@
 all:
-	mv dist/* log
+	-mv -f dist/* log
 	python setup.py bdist_wheel
 	python setup.py sdist
 	twine upload dist/*
