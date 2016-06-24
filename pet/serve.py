@@ -1,5 +1,4 @@
 import web
-from serve import pet_serve
 import paste.httpserver
 
 def pet_serve():
