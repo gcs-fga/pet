@@ -8,6 +8,6 @@ Priority: optional
 Package: pet
 # Version: 0.1
 Architecture: any
-Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, python, postgresql-9.4-debversion, postgresql-9.4, wget, python-paste, postgresql-9.4-debversion, python-argparse, python-debian, python-debianbts, python-inotifyx, python-paste, python-psycopg2, python-pyramid, python-sqlalchemy, python-subversion
+Depends: ${shlibs:Depends}, ${python:Depends}, ${misc:Depends}, postgresql-9.4-debversion, postgresql-9.4, wget, python-paste, postgresql-9.4-debversion, python-argparse, python-debian, python-debianbts, python-inotifyx, python-paste, python-psycopg2, python-pyramid, python-sqlalchemy, python-subversion, pyramid-chameleon
 Description: PET - Package Entropy Tracker
 	PET is a collection of scripts that gather information about your (or your group's) packages. It allows you to see in a bird's eye view the health of hundreds of packages, instantly realizing where work is needed.
