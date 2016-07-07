@@ -1,0 +1,6 @@
+#!/bin/sh
+pet_path = /usr/bin/pet
+
+$pet_path/update-package libboolean-perl
+$pet_path/update-bts
+$pet_path/update-archive debian

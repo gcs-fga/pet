@@ -1,0 +1,3 @@
+#!/bin/sh
+pet_path = /usr/bin/pet
+$pet_path/pet-serve
