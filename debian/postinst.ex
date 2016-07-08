@@ -21,9 +21,9 @@ set -e
 case "$1" in
     configure)
 	# configure pet
-	/usr/bin/pet/shell/configpg
-	/usr/bin/pet/shell/migratepg
-	/usr/bin/pet/shell/pet-update
+	shell/configpg
+	shell/migratepg
+	shell/pet-update
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)

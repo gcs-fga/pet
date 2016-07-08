@@ -1,7 +1,7 @@
 doc/ usr/bin/pet
 pet/ usr/bin/pet
 manifests/ usr/bin/pet
-.gitignore usr/bin/pet
+shell/ usr/bin/pet
 COPYING usr/bin/pet
 Dockerfile usr/bin/pet
 README.md usr/bin/pet
