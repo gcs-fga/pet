@@ -1,0 +1,16 @@
+#!/bin/sh
+pet_path=/usr/bin/pet
+argument="$1"
+case $argument in
+	-u | --update)
+		$pet_path/update-package libboolean-perl
+		$pet_path/update-bts
+		$pet_path/update-archive debian
+	;;
+	-s | --server)
+		$pet_path/pet-serve
+	;;
+	*)
+		echo "Error. Command not found. -s or -u"
+	;;
+esac
