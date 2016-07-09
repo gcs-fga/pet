@@ -1,0 +1,3 @@
+#!/bin/sh
+#export PATH=$PATH:/usr/bin/pet/shell
+echo "export PATH=$PATH:/usr/bin/pet/shell" >> ~/.profile

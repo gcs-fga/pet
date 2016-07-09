@@ -1,0 +1,52 @@
+#!/bin/sh
+
+path_files=/usr/bin/pet/manifests/files
+path_original_file=.
+path_original_pg=/etc/postgresql/9.4/main
+file="$1"
+
+replace_config_files() {
+	# change name for not to overwrite
+	echo "Create copy new"
+	cp $path_files/$file $path_files/$file.new
+	echo "Copy new created"
+	
+	# send to $path_original_hosts path
+	echo "Move new to path original"
+	mv $path_files/$file.new $path_original_file/
+	echo "New moved to path of original file"
+
+	# compare the two files. Original and new. The difference writted in $file.bac
+	echo "create file diff"
+	sort $path_original_file/$file >/dev/null
+	sort $path_original_file/$file.new >/dev/null
+	comm -13 $path_original_file/$file $path_original_file/$file.new >> $path_original_file/$file.diff >/dev/null
+	echo "diff created"
+
+	# create beckup original $file
+	echo "create beckup of original file"
+	cp $path_original_file/$file $path_original_file/$file.bac
+	echo "beckup created"
+
+	# Get difference from $file.diff to last line in original $file
+	echo "add diff in new original file"
+	cat $path_original_file/$file.diff >> $path_original_file/$file >/dev/null
+	echo "file updated"
+
+	# Delete unecessary files created
+	rm $path_original_file/$file.diff $path_original_file/$file.new
+ 
+}
+
+if [ "$file" = "hosts" ]; then
+	path_original_file=/etc
+	replace_config_files
+elif [ "$file" = "pg_hba.conf" ]; then
+	path_original_file=$path_original_pg
+	replace_config_files
+elif [ "$file" = "postgresql.conf" ]; then
+	path_original_file=$path_original_pg
+	replace_config_files
+else
+	echo "ERROR. File not found"
+fi

@@ -1,5 +1,5 @@
 #!/bin/sh
-# postinst script for pyramid-chameleon
+# postinst script for pet
 #
 # see: dh_installdeb(1)
 
@@ -20,9 +20,18 @@ set -e
 
 case "$1" in
     configure)
-	# configure pet
+	# Move files to configure pet
+	/usr/bin/pet/shell/configfiles hosts
+	/usr/bin/pet/shell/configfiles pg_hba.conf
+	/usr/bin/pet/shell/configfiles postgresql.conf
+	
+	# Configure pet
 	/usr/bin/pet/shell/configpg
 	/usr/bin/pet/shell/migratepg
+	
+	# Create command-line pet direct
+	#echo "export PATH=$PATH:/usr/bin/pet/shell" >> ~/.profile
+	. /usr/bin/pet/shell/configpetcommand
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
