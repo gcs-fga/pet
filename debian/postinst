@@ -24,7 +24,8 @@ case "$1" in
 	/usr/bin/pet/shell/configfiles hosts
 	/usr/bin/pet/shell/configfiles pg_hba.conf
 	/usr/bin/pet/shell/configfiles postgresql.conf
-	
+	sudo service postgresql restart
+
 	# Configure pet
 	/usr/bin/pet/shell/configpg
 	/usr/bin/pet/shell/migratepg
