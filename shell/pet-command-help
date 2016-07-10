@@ -1,0 +1,25 @@
+Update PET
+Usage: PET pet [options] [arguments]
+	options:
+		-u, --update		Updatade without up database.
+	arguments:
+		-r, --repository	Update local repository.
+		-p, --packages		Update the packages. Executed after update-package.
+		empty argument		Update packages and update with archive debian.
+
+Get packages
+Usage: PET update-package arguments
+	arguments:
+		Name of package(s)
+
+Run PET
+Usage: PET pet [options]
+	options:
+		-s, --server		Run the PET.
+
+
+Executing PET
+	1 - Update repository: $ pet -u -r	
+	2 - Get packages name: $ update-package packages_name
+	3 - Update all packages: $ pet -u -p or $ pet update
+	4 - Run PET: $ pet -s

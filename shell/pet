@@ -22,7 +22,10 @@ case $argument in
 	-s | --server)
 		$pet_path/pet-serve
 	;;
+	-h | --help)
+		cat /usr/bin/pet/shell/pet-command-help
+	;;
 	*)
-		echo "Error. Command not found. -s or -u"
+		echo "Invalid option or argument. Type "pet -h" for help."
 	;;
 esac
