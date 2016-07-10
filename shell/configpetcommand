@@ -1,3 +1,6 @@
 #!/bin/sh
-#export PATH=$PATH:/usr/bin/pet/shell
-echo "export PATH=$PATH:/usr/bin/pet/shell" >> ~/.profile
+path_pet=/usr/bin/pet
+export PATH=$PATH:$path_pet
+export PATH=$PATH:$path_pet/shell
+path_string="echo PATH=$PATH"
+$path_string >> $HOME/.profile

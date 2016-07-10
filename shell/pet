@@ -1,11 +1,23 @@
 #!/bin/sh
 pet_path=/usr/bin/pet
 argument="$1"
+argument2="$2"
 case $argument in
 	-u | --update)
-		$pet_path/update-package libboolean-perl
-		$pet_path/update-bts
-		$pet_path/update-archive debian
+		case $argument2 in
+			-r | --repository)
+				echo "Execute update-package packagers_name after."
+				/usr/bin/pet/update-repository 1
+			;;
+			-p | --packages)
+				/usr/bin/pet/update-bts
+			;;
+			*)
+				#$pet_path/update-package libboolean-perl
+				$pet_path/update-bts
+				$pet_path/update-archive debian
+			;;
+		esac
 	;;
 	-s | --server)
 		$pet_path/pet-serve
