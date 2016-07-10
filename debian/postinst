@@ -21,9 +21,9 @@ set -e
 case "$1" in
     configure)
 	# Move files to configure pet
-	/usr/bin/pet/shell/configfiles hosts
-	/usr/bin/pet/shell/configfiles pg_hba.conf
-	/usr/bin/pet/shell/configfiles postgresql.conf
+	#/usr/bin/pet/shell/configfiles hosts
+	#/usr/bin/pet/shell/configfiles pg_hba.conf
+	#/usr/bin/pet/shell/configfiles postgresql.conf
 	sudo service postgresql restart
 
 	# Configure pet
