@@ -20,13 +20,7 @@ set -e
 
 
 case "$1" in
-    purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-	# Drop db and user pet
-	#echo "Dropping database pet and user pet..."
-	#sudo su postgres -c "dropdb pet"
-	#sudo su postgres -c "dropuser pet"
-	#echo "Database and User pet deleted"
-	
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)	
 	# Restore beckups of original files
 	#echo "Restoring original files..."
 	#sudo rm /etc/hosts
@@ -42,6 +36,13 @@ case "$1" in
 	
 	# Remove directory pet
 	sudo rm -rf /usr/bin/pet
+    ;;
+    purge)
+	# Drop db and user pet
+	echo "Dropping database pet and user pet..."
+	sudo su postgres -c "dropdb pet"
+	sudo su postgres -c "dropuser pet"
+
     ;;
 
     *)
